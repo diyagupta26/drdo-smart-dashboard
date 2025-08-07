@@ -1,0 +1,519 @@
+import { useState, useEffect } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { CheckCircle, AlertCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import type { Venue, Resource } from "@shared/schema";
+
+const bookingSchema = z.object({
+  eventTitle: z.string().min(1, "Event title is required"),
+  eventDescription: z.string().optional(),
+  meetingType: z.enum(["offline", "online", "miscellaneous"]),
+  eventDate: z.string().min(1, "Event date is required"),
+  startTime: z.string().min(1, "Start time is required"),
+  endTime: z.string().min(1, "End time is required"),
+  expectedAttendees: z.string().min(1, "Number of attendees is required"),
+  department: z.string().min(1, "Department is required"),
+  venueId: z.string().min(1, "Venue selection is required"),
+  requestedResources: z.array(z.string()).default([]),
+  specialRequirements: z.string().optional(),
+});
+
+type BookingForm = z.infer<typeof bookingSchema>;
+
+const departments = [
+  "Aeronautical Development Establishment",
+  "Defence R&D Organization HQ",
+  "Armament Research & Development",
+  "Defence Electronics Research Lab",
+  "Centre for Military Airworthiness",
+  "Defence Science Centre",
+  "Institute for Systems Studies",
+  "Naval Science & Tech Lab",
+  "Advanced Systems Laboratory",
+  "Research Centre Imarat",
+  "Centre for Artificial Intelligence",
+  "Naval Physical & Oceanographic Lab",
+  "Defence Materials & Stores R&D",
+];
+
+export default function BookVenue() {
+  const [selectedMeetingType, setSelectedMeetingType] = useState<string>("offline");
+  const [selectedVenue, setSelectedVenue] = useState<string>("");
+  const [selectedResources, setSelectedResources] = useState<string[]>([]);
+  const [availability, setAvailability] = useState<{ available: boolean; checked: boolean }>({ available: false, checked: false });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingBookingId, setEditingBookingId] = useState<string | null>(null);
+  
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  // Check if we're editing a booking
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const editId = params.get('edit');
+    if (editId) {
+      setIsEditing(true);
+      setEditingBookingId(editId);
+    }
+  }, []);
+
+  const { data: venues = [] } = useQuery<Venue[]>({
+    queryKey: ["/api/venues"],
+  });
+
+  const { data: resources = [] } = useQuery<Resource[]>({
+    queryKey: ["/api/resources"],
+  });
+
+  // Fetch booking data if editing
+  const { data: editingBooking } = useQuery({
+    queryKey: ["/api/bookings", editingBookingId],
+    enabled: !!editingBookingId && isEditing,
+  });
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<BookingForm>({
+    resolver: zodResolver(bookingSchema),
+    defaultValues: {
+      meetingType: "offline",
+      requestedResources: [],
+    },
+  });
+
+  // Populate form when editing booking is loaded
+  useEffect(() => {
+    if (editingBooking && isEditing) {
+      setValue("eventTitle", editingBooking.eventTitle);
+      setValue("eventDescription", editingBooking.eventDescription || "");
+      setValue("meetingType", editingBooking.meetingType);
+      setValue("eventDate", new Date(editingBooking.eventDate).toISOString().split('T')[0]);
+      setValue("startTime", editingBooking.startTime);
+      setValue("endTime", editingBooking.endTime);
+      setValue("expectedAttendees", editingBooking.expectedAttendees.toString());
+      setValue("department", editingBooking.department);
+      setValue("venueId", editingBooking.venueId);
+      setValue("specialRequirements", editingBooking.specialRequirements || "");
+      
+      setSelectedMeetingType(editingBooking.meetingType);
+      setSelectedVenue(editingBooking.venueId);
+      setSelectedResources(editingBooking.requestedResources || []);
+      setValue("requestedResources", editingBooking.requestedResources || []);
+    }
+  }, [editingBooking, isEditing, setValue]);
+
+  const availabilityMutation = useMutation({
+    mutationFn: async (data: { venueId: string; date: string; startTime: string; endTime: string }) => {
+      const response = await apiRequest("POST", "/api/venues/check-availability", data);
+      return response.json();
+    },
+    onSuccess: (result) => {
+      setAvailability({ available: result.available, checked: true });
+    },
+  });
+
+  const bookingMutation = useMutation({
+    mutationFn: async (data: BookingForm) => {
+      const method = isEditing ? "PATCH" : "POST";
+      const url = isEditing ? `/api/bookings/${editingBookingId}` : "/api/bookings";
+      const response = await apiRequest(method, url, {
+        ...data,
+        expectedAttendees: parseInt(data.expectedAttendees),
+        requestedResources: selectedResources,
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: isEditing ? "Booking updated successfully" : "Booking submitted successfully",
+        description: isEditing ? "Your changes have been saved" : "Your request has been sent for approval",
+      });
+      queryClient.invalidateQueries({ queryKey: ["/api/bookings/user"] });
+      window.location.href = "/user/bookings";
+    },
+    onError: (error) => {
+      toast({
+        title: isEditing ? "Update failed" : "Booking failed",
+        description: error instanceof Error ? error.message : "Failed to process request",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const watchedFields = watch(["venueId", "eventDate", "startTime", "endTime"]);
+
+  useEffect(() => {
+    const [venueId, eventDate, startTime, endTime] = watchedFields;
+    if (venueId && eventDate && startTime && endTime) {
+      availabilityMutation.mutate({ venueId, date: eventDate, startTime, endTime });
+    } else {
+      setAvailability({ available: false, checked: false });
+    }
+  }, [watchedFields]);
+
+  const onSubmit = (data: BookingForm) => {
+    if (!availability.available) {
+      toast({
+        title: "Venue not available",
+        description: "Please select a different time slot or venue",
+        variant: "destructive",
+      });
+      return;
+    }
+    bookingMutation.mutate(data);
+  };
+
+  const handleResourceChange = (resourceId: string, checked: boolean) => {
+    const updated = checked 
+      ? [...selectedResources, resourceId]
+      : selectedResources.filter(id => id !== resourceId);
+    setSelectedResources(updated);
+    setValue("requestedResources", updated);
+  };
+
+  return (
+    <div className="flex-1 overflow-y-auto">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {isEditing ? "Edit Booking Request" : "Book Venue & IT Resources"}
+            </h1>
+            <p className="text-sm text-gray-600">
+              {isEditing ? "Update your venue booking and IT requirements" : "Schedule meetings and request IT support for your events"}
+            </p>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="flex-1 overflow-y-auto p-6">
+        <div className="max-w-4xl mx-auto">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {/* Meeting Type Selection */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Meeting Type</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {[
+                    { value: "offline", title: "Offline Meetings", description: "Require physical venues (Lecture Hall, Auditorium, Others)" },
+                    { value: "online", title: "Online Meetings", description: "May need VC support, projector, mic, etc." },
+                    { value: "miscellaneous", title: "Miscellaneous Activities", description: "For internal sessions, training, events at different DRDO locations" },
+                  ].map((type) => (
+                    <label
+                      key={type.value}
+                      className={`relative flex cursor-pointer rounded-lg border p-4 focus-within:ring-2 focus-within:ring-blue-500 ${
+                        selectedMeetingType === type.value 
+                          ? "border-blue-500 bg-blue-50" 
+                          : "border-gray-300 hover:border-blue-500"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        value={type.value}
+                        {...register("meetingType")}
+                        className="sr-only"
+                        onChange={(e) => {
+                          setSelectedMeetingType(e.target.value);
+                          setValue("meetingType", e.target.value as "offline" | "online" | "miscellaneous");
+                        }}
+                      />
+                      <div className="w-full">
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm font-medium text-gray-900">{type.title}</div>
+                          {selectedMeetingType === type.value && (
+                            <CheckCircle className="h-5 w-5 text-blue-500" />
+                          )}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500">{type.description}</div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+                {errors.meetingType && (
+                  <p className="text-sm text-red-600 mt-2">{errors.meetingType.message}</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Event Details */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Event Details</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="eventTitle">Event Title</Label>
+                    <Input
+                      id="eventTitle"
+                      {...register("eventTitle")}
+                      placeholder="Enter event title"
+                    />
+                    {errors.eventTitle && (
+                      <p className="text-sm text-red-600">{errors.eventTitle.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="department">Department</Label>
+                    <Select onValueChange={(value) => setValue("department", value)}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Department" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {departments.map((dept) => (
+                          <SelectItem key={dept} value={dept}>
+                            {dept}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {errors.department && (
+                      <p className="text-sm text-red-600">{errors.department.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="eventDate">Event Date</Label>
+                    <Input
+                      id="eventDate"
+                      type="date"
+                      {...register("eventDate")}
+                      min={new Date().toISOString().split('T')[0]}
+                    />
+                    {errors.eventDate && (
+                      <p className="text-sm text-red-600">{errors.eventDate.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="expectedAttendees">Expected Attendees</Label>
+                    <Input
+                      id="expectedAttendees"
+                      type="number"
+                      {...register("expectedAttendees")}
+                      placeholder="Number of attendees"
+                      min="1"
+                    />
+                    {errors.expectedAttendees && (
+                      <p className="text-sm text-red-600">{errors.expectedAttendees.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <Label htmlFor="eventDescription">Event Description</Label>
+                  <Textarea
+                    id="eventDescription"
+                    {...register("eventDescription")}
+                    placeholder="Provide details about the event purpose and agenda"
+                    rows={3}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Time Slot Selection */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Time Slot</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="startTime">Start Time</Label>
+                    <Input
+                      id="startTime"
+                      type="time"
+                      {...register("startTime")}
+                    />
+                    {errors.startTime && (
+                      <p className="text-sm text-red-600">{errors.startTime.message}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <Label htmlFor="endTime">End Time</Label>
+                    <Input
+                      id="endTime"
+                      type="time"
+                      {...register("endTime")}
+                    />
+                    {errors.endTime && (
+                      <p className="text-sm text-red-600">{errors.endTime.message}</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Availability Status */}
+                {availability.checked && (
+                  <div className={`mt-4 p-4 border rounded-md ${
+                    availability.available 
+                      ? "bg-green-50 border-green-200" 
+                      : "bg-red-50 border-red-200"
+                  }`}>
+                    <div className="flex items-center">
+                      {availability.available ? (
+                        <>
+                          <CheckCircle className="w-5 h-5 text-green-500 mr-2" />
+                          <span className="text-sm font-medium text-green-800">Time slot available</span>
+                        </>
+                      ) : (
+                        <>
+                          <AlertCircle className="w-5 h-5 text-red-500 mr-2" />
+                          <span className="text-sm font-medium text-red-800">Time slot not available</span>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Venue Selection */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Venue Selection</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {venues.map((venue) => (
+                    <label
+                      key={venue.id}
+                      className={`relative flex cursor-pointer rounded-lg border p-4 focus-within:ring-2 focus-within:ring-blue-500 ${
+                        selectedVenue === venue.id 
+                          ? "border-blue-500 bg-blue-50" 
+                          : "border-gray-300 hover:border-blue-500"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        value={venue.id}
+                        {...register("venueId")}
+                        className="sr-only"
+                        onChange={(e) => {
+                          setSelectedVenue(e.target.value);
+                          setValue("venueId", e.target.value);
+                        }}
+                      />
+                      <div className="w-full">
+                        <div className="flex items-center justify-between">
+                          <div className="text-sm font-medium text-gray-900">{venue.name}</div>
+                          {selectedVenue === venue.id && (
+                            <CheckCircle className="h-5 w-5 text-blue-500" />
+                          )}
+                        </div>
+                        <div className="mt-1 text-xs text-gray-500">Capacity: {venue.capacity} people</div>
+                        <div className="mt-1 text-xs text-gray-500">Floor: {venue.floor}</div>
+                        <div className="mt-2 flex flex-wrap gap-1">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                            venue.status === 'available' 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {venue.status}
+                          </span>
+                          {venue.amenities?.map((amenity, index) => (
+                            <span key={index} className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                              {amenity}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+                {errors.venueId && (
+                  <p className="text-sm text-red-600 mt-2">{errors.venueId.message}</p>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* IT Resources */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">IT Resources Required</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {resources.map((resource) => (
+                    <label key={resource.id} className="relative flex items-center space-x-3 cursor-pointer">
+                      <Checkbox
+                        checked={selectedResources.includes(resource.id)}
+                        onCheckedChange={(checked) => handleResourceChange(resource.id, checked as boolean)}
+                      />
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{resource.name}</div>
+                        {resource.description && (
+                          <div className="text-xs text-gray-500">{resource.description}</div>
+                        )}
+                      </div>
+                    </label>
+                  ))}
+                </div>
+
+                <div className="mt-6">
+                  <Label htmlFor="specialRequirements">Special Requirements</Label>
+                  <Textarea
+                    id="specialRequirements"
+                    {...register("specialRequirements")}
+                    placeholder="Please specify any additional IT requirements such as:
+• Specific software installations
+• Network configurations
+• Security clearance requirements
+• Special hardware needs
+• Recording/streaming requirements
+• Remote participation support
+• Backup power requirements"
+                    rows={4}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Submit Button */}
+            <Card>
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm text-gray-600">Your booking request will be sent for approval once submitted.</p>
+                    <p className="text-xs text-gray-500 mt-1">You can track the status in the "Track Status" section.</p>
+                  </div>
+                  <Button
+                    type="submit"
+                    className="drdo-active hover:bg-blue-600"
+                    disabled={bookingMutation.isPending || !availability.available}
+                  >
+                    {bookingMutation.isPending 
+                      ? (isEditing ? "Updating..." : "Submitting...") 
+                      : (isEditing ? "Update Booking Request" : "Submit Booking Request")
+                    }
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </form>
+        </div>
+      </main>
+    </div>
+  );
+}

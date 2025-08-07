@@ -1,0 +1,85 @@
+[
+  {
+    "id": "1",
+    "username": "admin",
+    "email": "admin@drdo.gov.in",
+    "password": "$2b$10$4P95.Q9/nuZV7LWlwarKH.fyiKNc5e/9fKiBP5IdHrqQkPEEPru3q",
+    "firstName": "Admin",
+    "lastName": "Director",
+    "role": "group_director",
+    "department": "Administration",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "2",
+    "username": "user",
+    "email": "user@drdo.gov.in",
+    "password": "$2b$10$4P95.Q9/nuZV7LWlwarKH.fyiKNc5e/9fKiBP5IdHrqQkPEEPru3q",
+    "firstName": "Test",
+    "lastName": "User",
+    "role": "user",
+    "department": "Research & Development",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "3",
+    "username": "secretary",
+    "email": "secretary@drdo.gov.in",
+    "password": "$2b$10$4P95.Q9/nuZV7LWlwarKH.fyiKNc5e/9fKiBP5IdHrqQkPEEPru3q",
+    "firstName": "Secretary",
+    "lastName": "Admin",
+    "role": "secretary",
+    "department": "Administration",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "4",
+    "username": "itteam",
+    "email": "it@drdo.gov.in",
+    "password": "$2b$10$4P95.Q9/nuZV7LWlwarKH.fyiKNc5e/9fKiBP5IdHrqQkPEEPru3q",
+    "firstName": "IT",
+    "lastName": "Team",
+    "role": "it_team",
+    "department": "Information Technology",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "3ginkyz7d",
+    "username": "secretary",
+    "password": "$2b$10$xdwJWpKREKhZncMB39iMvOCjMjAUSfACiST5rQcz9h0d9sreIVg6q",
+    "email": "secretary@drdo.gov.in",
+    "firstName": "Secretary",
+    "lastName": "Admin",
+    "role": "secretary",
+    "department": "Administration",
+    "createdAt": "2025-08-07T09:24:02.387Z",
+    "updatedAt": "2025-08-07T09:24:02.387Z"
+  },
+  {
+    "id": "wubfx5n8g",
+    "username": "itadmin",
+    "password": "$2b$10$ua.qShXRJ8flpsjUjdoADO4U68cEBIK/IYkphSrYCAigTEOMzHAOG",
+    "email": "itadmin@drdo.gov.in",
+    "firstName": "Itadmin",
+    "lastName": "Admin",
+    "role": "it_team",
+    "department": "Administration",
+    "createdAt": "2025-08-07T09:24:02.431Z",
+    "updatedAt": "2025-08-07T09:24:02.431Z"
+  },
+  {
+    "id": "szewzs3oo",
+    "username": "asaaaaa",
+    "password": "$2b$10$l1ZK9JFqgA1xGZKpgPI1GOakTSTJLIzKG5pgxs2vpdIujc9N2awbG",
+    "email": "adiban23@gmail.com",
+    "firstName": "ad",
+    "lastName": "dfr",
+    "department": "Armament Research & Development",
+    "createdAt": "2025-08-07T09:33:50.784Z",
+    "updatedAt": "2025-08-07T09:33:50.784Z"
+  }
+]

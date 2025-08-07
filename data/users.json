@@ -1,0 +1,61 @@
+[
+  {
+    "id": "1",
+    "username": "user",
+    "email": "user@drdo.gov.in",
+    "password": "$2b$10$IT6dmfYqcTAhATfgjS4JEulVfPQZSW4Buu3a.Waez6CysQjTpq2o2",
+    "firstName": "Test",
+    "lastName": "User",
+    "role": "user",
+    "department": "Research & Development",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "2",
+    "username": "director",
+    "email": "director@drdo.gov.in",
+    "password": "$2b$10$IT6dmfYqcTAhATfgjS4JEulVfPQZSW4Buu3a.Waez6CysQjTpq2o2",
+    "firstName": "Group",
+    "lastName": "Director",
+    "role": "group_director",
+    "department": "Administration",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "3",
+    "username": "secretary",
+    "email": "secretary@drdo.gov.in",
+    "password": "$2b$10$IT6dmfYqcTAhATfgjS4JEulVfPQZSW4Buu3a.Waez6CysQjTpq2o2",
+    "firstName": "Secretary",
+    "lastName": "Admin",
+    "role": "secretary",
+    "department": "Administration",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "4",
+    "username": "itadmin",
+    "email": "itadmin@drdo.gov.in",
+    "password": "$2b$10$IT6dmfYqcTAhATfgjS4JEulVfPQZSW4Buu3a.Waez6CysQjTpq2o2",
+    "firstName": "IT",
+    "lastName": "Admin",
+    "role": "it_team",
+    "department": "Information Technology",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "d5dqksgwo",
+    "username": "diyagupta7",
+    "password": "$2b$10$cTf0gqcHfoX6Kx76j8b0gOnkGVbhZVj5NITNL7eFOY7ytwQpqlJTq",
+    "email": "diya.gupta9726@gmail.com",
+    "firstName": "diya",
+    "lastName": "gupta",
+    "department": "Electronics & Radar Dev. Establishment",
+    "createdAt": "2025-08-07T11:48:00.681Z",
+    "updatedAt": "2025-08-07T11:48:00.681Z"
+  }
+]

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRDO Venue & IT Resource Booking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'drdo-blue': '#1e293b',
+                        'drdo-active': '#1e90ff',
+                        'drdo-success': '#10b981',
+                        'drdo-warning': '#f59e0b',
+                        'drdo-error': '#ef4444'
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- @COMPONENT: App -->
+    <div class="flex h-screen overflow-hidden" data-mock="true">
+        
+        <!-- @COMPONENT: Sidebar -->
+        <!-- Sidebar Navigation -->
+        <div class="w-64 bg-drdo-blue text-white flex-shrink-0">
+            <div class="p-6">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-drdo-active rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-lg">D</span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold">DRDO</h1>
+                        <p class="text-sm text-gray-300">Booking System</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="mt-8">
+                <div class="px-6 pb-4">
+                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">User Menu</div>
+                </div>
+                
+                <!-- @STATE: activeTab:string = 'dashboard' -->
+                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors" data-bind="activeTab === 'dashboard'">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v2H8V5z"></path>
+                    </svg>
+                    Dashboard
+                </a>
+                
+                <a href="#" class="flex items-center px-6 py-3 bg-drdo-active text-white" data-bind="activeTab === 'book'">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Book Venue
+                </a>
+                
+                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                    </svg>
+                    My Bookings
+                </a>
+                
+                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Track Status
+                </a>
+                
+                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"></path>
+                    </svg>
+                    Feedback
+                </a>
+                
+                <div class="px-6 py-4 mt-8">
+                    <div class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Admin</div>
+                </div>
+                
+                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Approvals
+                </a>
+                
+                <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    IT Setup
+                </a>
+            </nav>
+            
+            <div class="absolute bottom-6 left-6 right-6">
+                <div class="bg-gray-700 rounded-lg p-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gray-500 rounded-full"></div>
+                        <div>
+                            <p class="text-sm font-medium" data-bind="user.name">Dr. Rajesh Kumar</p>
+                            <p class="text-xs text-gray-400" data-bind="user.role">Senior Scientist</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: Sidebar -->
+
+        <!-- @COMPONENT: MainContent -->
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- @COMPONENT: Header -->
+            <!-- Header -->
+            <header class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">Book Venue & IT Resources</h1>
+                        <p class="text-sm text-gray-600">Schedule meetings and request IT support for your events</p>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM4 19h9M4 15h9M4 11h9M4 7h9M4 3h9"></path>
+                            </svg>
+                        </button>
+                        <button class="text-gray-400 hover:text-gray-600 relative">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path>
+                            </svg>
+                            <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            <!-- @END_COMPONENT: Header -->
+
+            <!-- @COMPONENT: BookingForm -->
+            <!-- Booking Form Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <div class="max-w-4xl mx-auto">
+                    
+                    <!-- Booking Progress -->
+                    <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Booking Progress</h3>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-drdo-active text-white rounded-full flex items-center justify-center text-sm font-medium">1</div>
+                                <span class="ml-3 text-sm font-medium text-gray-900">Request Details</span>
+                            </div>
+                            <div class="flex-1 mx-4 h-1 bg-gray-200 rounded">
+                                <div class="h-1 bg-drdo-active rounded" style="width: 25%"></div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-medium">2</div>
+                                <span class="ml-3 text-sm text-gray-500">GD Approval</span>
+                            </div>
+                            <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-medium">3</div>
+                                <span class="ml-3 text-sm text-gray-500">Secretary Approval</span>
+                            </div>
+                            <div class="flex-1 mx-4 h-1 bg-gray-200 rounded"></div>
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center text-sm font-medium">4</div>
+                                <span class="ml-3 text-sm text-gray-500">IT Setup</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Booking Form -->
+                    <form class="space-y-6" data-event="submit:handleBookingSubmit">
+                        
+                        <!-- Meeting Type Selection -->
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Meeting Type</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <!-- @STATE: selectedMeetingType:string = 'offline' -->
+                                <label class="relative flex cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-drdo-active focus-within:ring-2 focus-within:ring-drdo-active" data-bind="selectedMeetingType === 'offline'">
+                                    <input type="radio" name="meetingType" value="offline" class="sr-only" />
+                                    <div class="flex w-full items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-sm">
+                                                <div class="font-medium text-gray-900">Offline Meeting</div>
+                                                <div class="text-gray-500">Physical venue required</div>
+                                            </div>
+                                        </div>
+                                        <svg class="h-5 w-5 text-drdo-active opacity-0 peer-checked:opacity-100" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-drdo-active focus-within:ring-2 focus-within:ring-drdo-active">
+                                    <input type="radio" name="meetingType" value="online" class="sr-only" />
+                                    <div class="flex w-full items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-sm">
+                                                <div class="font-medium text-gray-900">Online Meeting</div>
+                                                <div class="text-gray-500">VC setup required</div>
+                                            </div>
+                                        </div>
+                                        <svg class="h-5 w-5 text-drdo-active opacity-0 peer-checked:opacity-100" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-drdo-active focus-within:ring-2 focus-within:ring-drdo-active">
+                                    <input type="radio" name="meetingType" value="miscellaneous" class="sr-only" />
+                                    <div class="flex w-full items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="text-sm">
+                                                <div class="font-medium text-gray-900">Miscellaneous</div>
+                                                <div class="text-gray-500">Training, events</div>
+                                            </div>
+                                        </div>
+                                        <svg class="h-5 w-5 text-drdo-active opacity-0 peer-checked:opacity-100" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Event Details -->
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Event Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="eventTitle" class="block text-sm font-medium text-gray-700 mb-2">Event Title</label>
+                                    <input type="text" id="eventTitle" name="eventTitle" data-bind="form.eventTitle" placeholder="Enter event title" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active" />
+                                </div>
+                                
+                                <div>
+                                    <label for="department" class="block text-sm font-medium text-gray-700 mb-2">Department</label>
+                                    <select id="department" name="department" data-bind="form.department" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active">
+                                        <option value="">Select Department</option>
+                                        <option value="electronics">Electronics & Radar Dev. Establishment</option>
+                                        <option value="armament">Armament Research & Development</option>
+                                        <option value="aeronautical">Aeronautical Development Establishment</option>
+                                        <option value="naval">Naval Physical & Oceanographic Lab</option>
+                                        <option value="materials">Defence Materials & Stores R&D</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label for="eventDate" class="block text-sm font-medium text-gray-700 mb-2">Event Date</label>
+                                    <input type="date" id="eventDate" name="eventDate" data-bind="form.eventDate" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active" />
+                                </div>
+                                
+                                <div>
+                                    <label for="expectedAttendees" class="block text-sm font-medium text-gray-700 mb-2">Expected Attendees</label>
+                                    <input type="number" id="expectedAttendees" name="expectedAttendees" data-bind="form.expectedAttendees" placeholder="Number of attendees" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active" />
+                                </div>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="eventDescription" class="block text-sm font-medium text-gray-700 mb-2">Event Description</label>
+                                <textarea id="eventDescription" name="eventDescription" rows="3" data-bind="form.eventDescription" placeholder="Provide details about the event purpose and agenda" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Time Slot Selection -->
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Time Slot</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="startTime" class="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
+                                    <input type="time" id="startTime" name="startTime" data-bind="form.startTime" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active" />
+                                </div>
+                                
+                                <div>
+                                    <label for="endTime" class="block text-sm font-medium text-gray-700 mb-2">End Time</label>
+                                    <input type="time" id="endTime" name="endTime" data-bind="form.endTime" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active" />
+                                </div>
+                            </div>
+                            
+                            <!-- Availability Status -->
+                            <div class="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
+                                <div class="flex items-center">
+                                    <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span class="text-sm font-medium text-green-800">Time slot available</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Venue Selection -->
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">Venue Selection</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- @STATE: selectedVenue:string = 'lecture-hall-a' -->
+                                <label class="relative flex cursor-pointer rounded-lg border-2 border-drdo-active bg-drdo-active/5 p-4 focus-within:ring-2 focus-within:ring-drdo-active" data-bind="selectedVenue === 'lecture-hall-a'">
+                                    <input type="radio" name="venue" value="lecture-hall-a" class="sr-only" />
+                                    <div class="w-full">
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-sm font-medium text-gray-900">Lecture Hall A</div>
+                                            <svg class="h-5 w-5 text-drdo-active" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">Capacity: 150 people</div>
+                                        <div class="mt-1 text-xs text-gray-500">Floor: Ground</div>
+                                        <div class="mt-2 flex space-x-2">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Available</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">AC</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-drdo-active focus-within:ring-2 focus-within:ring-drdo-active">
+                                    <input type="radio" name="venue" value="auditorium" class="sr-only" />
+                                    <div class="w-full">
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-sm font-medium text-gray-900">Main Auditorium</div>
+                                            <svg class="h-5 w-5 text-drdo-active opacity-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">Capacity: 500 people</div>
+                                        <div class="mt-1 text-xs text-gray-500">Floor: First</div>
+                                        <div class="mt-2 flex space-x-2">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Available</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">AC</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">Audio System</span>
+                                        </div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex cursor-pointer rounded-lg border border-gray-300 p-4 hover:border-drdo-active focus-within:ring-2 focus-within:ring-drdo-active">
+                                    <input type="radio" name="venue" value="conference-room" class="sr-only" />
+                                    <div class="w-full">
+                                        <div class="flex items-center justify-between">
+                                            <div class="text-sm font-medium text-gray-900">Conference Room B</div>
+                                            <svg class="h-5 w-5 text-drdo-active opacity-0" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="mt-1 text-xs text-gray-500">Capacity: 25 people</div>
+                                        <div class="mt-1 text-xs text-gray-500">Floor: Second</div>
+                                        <div class="mt-2 flex space-x-2">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">Occupied</span>
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">AC</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- IT Resources -->
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-4">IT Resources Required</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                <!-- @STATE: selectedResources:array = ['projector', 'microphone'] -->
+                                <label class="relative flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="resources" value="projector" checked class="rounded border-gray-300 text-drdo-active focus:ring-drdo-active" data-bind="selectedResources.includes('projector')" />
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Projector</div>
+                                        <div class="text-xs text-gray-500">HD/4K display support</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="resources" value="microphone" checked class="rounded border-gray-300 text-drdo-active focus:ring-drdo-active" data-bind="selectedResources.includes('microphone')" />
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Microphone System</div>
+                                        <div class="text-xs text-gray-500">Wireless/Wired options</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="resources" value="videoconference" class="rounded border-gray-300 text-drdo-active focus:ring-drdo-active" />
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Video Conference</div>
+                                        <div class="text-xs text-gray-500">Teams/Zoom setup</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="resources" value="laptop" class="rounded border-gray-300 text-drdo-active focus:ring-drdo-active" />
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Laptop</div>
+                                        <div class="text-xs text-gray-500">Windows/Mac available</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="resources" value="whiteboard" class="rounded border-gray-300 text-drdo-active focus:ring-drdo-active" />
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Digital Whiteboard</div>
+                                        <div class="text-xs text-gray-500">Interactive display</div>
+                                    </div>
+                                </label>
+                                
+                                <label class="relative flex items-center space-x-3 cursor-pointer">
+                                    <input type="checkbox" name="resources" value="recording" class="rounded border-gray-300 text-drdo-active focus:ring-drdo-active" />
+                                    <div>
+                                        <div class="text-sm font-medium text-gray-900">Recording Setup</div>
+                                        <div class="text-xs text-gray-500">Audio/Video recording</div>
+                                    </div>
+                                </label>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <label for="specialRequirements" class="block text-sm font-medium text-gray-700 mb-2">Special Requirements</label>
+                                <textarea id="specialRequirements" name="specialRequirements" rows="2" data-bind="form.specialRequirements" placeholder="Any additional IT setup requirements..." class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="bg-white rounded-lg shadow-sm p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600">Your booking request will be sent for approval once submitted.</p>
+                                    <p class="text-xs text-gray-500 mt-1">You can track the status in the "Track Status" section.</p>
+                                </div>
+                                <button type="submit" class="bg-drdo-active text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600 focus:ring-4 focus:ring-blue-200 transition-colors" data-event="click:submitBooking">
+                                    Submit Booking Request
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </main>
+            <!-- @END_COMPONENT: BookingForm -->
+        </div>
+        <!-- @END_COMPONENT: MainContent -->
+    </div>
+    <!-- @END_COMPONENT: App -->
+
+    <!-- @COMPONENT: StatusTrackingModal -->
+    <!-- Status Tracking Modal (Hidden by default) -->
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" id="statusModal" data-mock="true">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">Booking Status: #BK2024001</h3>
+                        <button class="text-gray-400 hover:text-gray-600" onclick="document.getElementById('statusModal').classList.add('hidden')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-6">
+                    <!-- Status Timeline -->
+                    <div class="flow-root">
+                        <ul class="-mb-8">
+                            <!-- @MAP: statusSteps.map(step => ( -->
+                            <li>
+                                <div class="relative pb-8">
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-drdo-success flex items-center justify-center ring-8 ring-white">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Request <span class="font-medium text-gray-900">submitted successfully</span></p>
+                                                <p class="text-xs text-gray-400">Meeting details validated and submitted</p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time>Dec 10, 09:30 AM</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li>
+                                <div class="relative pb-8">
+                                    <div class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"></div>
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-drdo-warning flex items-center justify-center ring-8 ring-white">
+                                                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Pending <span class="font-medium text-gray-900">Group Director approval</span></p>
+                                                <p class="text-xs text-gray-400">Awaiting review by Dr. Sharma</p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time>Pending</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li>
+                                <div class="relative pb-8">
+                                    <div class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"></div>
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center ring-8 ring-white">
+                                                <span class="text-gray-600 text-sm">3</span>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">Awaiting <span class="font-medium text-gray-900">Secretary approval</span></p>
+                                                <p class="text-xs text-gray-400">Final administrative approval</p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time>Pending</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li>
+                                <div class="relative">
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center ring-8 ring-white">
+                                                <span class="text-gray-600 text-sm">4</span>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                                            <div>
+                                                <p class="text-sm text-gray-500">IT Setup <span class="font-medium text-gray-900">confirmation</span></p>
+                                                <p class="text-xs text-gray-400">Equipment and venue preparation</p>
+                                            </div>
+                                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                                                <time>Pending</time>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- @END_MAP )) -->
+                        </ul>
+                    </div>
+                    
+                    <!-- Current Status Summary -->
+                    <div class="mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="text-sm font-medium text-yellow-800">Current Status: Awaiting Group Director Approval</h3>
+                                <div class="mt-2 text-sm text-yellow-700">
+                                    <p>Your booking request is currently being reviewed by the Group Director. You will receive an email notification once the decision is made.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-drdo-active" onclick="document.getElementById('statusModal').classList.add('hidden')">
+                        Close
+                    </button>
+                    <button type="button" class="px-4 py-2 text-sm font-medium text-white bg-drdo-active rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-200">
+                        Refresh Status
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: StatusTrackingModal -->
+
+    <!-- @COMPONENT: FeedbackModal -->
+    <!-- Feedback Modal (Hidden by default) -->
+    <div class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden z-50" id="feedbackModal" data-mock="true">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">Submit Event Feedback</h3>
+                        <button class="text-gray-400 hover:text-gray-600" onclick="document.getElementById('feedbackModal').classList.add('hidden')">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <form class="p-6 space-y-6" data-event="submit:handleFeedbackSubmit">
+                    <div>
+                        <label for="eventRating" class="block text-sm font-medium text-gray-700 mb-2">Overall Event Rating</label>
+                        <div class="flex items-center space-x-2">
+                            <!-- @STATE: rating:number = 4 -->
+                            <div class="flex space-x-1" data-bind="rating">
+                                <button type="button" class="text-yellow-400 hover:text-yellow-500" data-event="click:setRating(1)">
+                                    <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+                                    </svg>
+                                </button>
+                                <!-- Repeat for 5 stars -->
+                            </div>
+                            <span class="text-sm text-gray-600">(4 out of 5 stars)</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label for="venueRating" class="block text-sm font-medium text-gray-700 mb-2">Venue Quality</label>
+                        <select id="venueRating" name="venueRating" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active">
+                            <option value="">Select rating</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good" selected>Good</option>
+                            <option value="average">Average</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="itSupport" class="block text-sm font-medium text-gray-700 mb-2">IT Support Quality</label>
+                        <select id="itSupport" name="itSupport" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active">
+                            <option value="">Select rating</option>
+                            <option value="excellent" selected>Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="average">Average</option>
+                            <option value="poor">Poor</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="feedbackText" class="block text-sm font-medium text-gray-700 mb-2">Detailed Feedback</label>
+                        <textarea id="feedbackText" name="feedbackText" rows="4" placeholder="Please share your experience and any suggestions for improvement..." class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-drdo-active focus:border-drdo-active"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="fileUploads" class="block text-sm font-medium text-gray-700 mb-2">Upload Files (Optional)</label>
+                        <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-drdo-active transition-colors">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <div class="mt-4">
+                                <label for="fileInput" class="cursor-pointer">
+                                    <span class="mt-2 block text-sm font-medium text-gray-900">Upload presentations, photos, or videos</span>
+                                    <span class="mt-1 block text-xs text-gray-500">PNG, JPG, PDF, PPT, MP4 up to 100MB</span>
+                                </label>
+                                <input id="fileInput" name="fileInput" type="file" multiple class="sr-only" accept=".png,.jpg,.jpeg,.pdf,.ppt,.pptx,.mp4,.mov" data-implementation="Handle file upload with progress indication" />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="px-6 py-4 bg-gray-50 flex justify-end space-x-3">
+                    <button type="button" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:ring-2 focus:ring-drdo-active" onclick="document.getElementById('feedbackModal').classList.add('hidden')">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 text-sm font-medium text-white bg-drdo-active rounded-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-200" data-event="click:submitFeedback">
+                        Submit Feedback
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: FeedbackModal -->
+
+    <script>
+        (function() {
+            // TODO: Implement real-time WebSocket connection for status updates
+            // TODO: Implement form validation and submission logic
+            // TODO: Implement role-based authentication and route protection
+            // TODO: Implement file upload functionality with progress indication
+            // TODO: Integrate with backend APIs for booking management
+            
+            // Demo functionality for showing modals
+            function showStatusModal() {
+                document.getElementById('statusModal').classList.remove('hidden');
+            }
+            
+            function showFeedbackModal() {
+                document.getElementById('feedbackModal').classList.remove('hidden');
+            }
+            
+            // Add demo button functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                // Add click handlers for demo purposes
+                const trackButton = document.querySelector('a[href="#"]:nth-child(4)');
+                if (trackButton) {
+                    trackButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        showStatusModal();
+                    });
+                }
+                
+                const feedbackButton = document.querySelector('a[href="#"]:nth-child(5)');
+                if (feedbackButton) {
+                    feedbackButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        showFeedbackModal();
+                    });
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "1",
+    "name": "Main Auditorium",
+    "capacity": 500,
+    "floor": "Ground",
+    "amenities": [
+      "AC",
+      "Audio System",
+      "Stage",
+      "Advanced Lighting"
+    ],
+    "status": "available",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "2",
+    "name": "Conference Room - DRDO Main",
+    "capacity": 30,
+    "floor": "Second",
+    "amenities": [
+      "AC",
+      "Video Conference",
+      "Smart TV"
+    ],
+    "status": "available",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "3",
+    "name": "Training Room - DRDO Lab",
+    "capacity": 50,
+    "floor": "First",
+    "amenities": [
+      "AC",
+      "Projector",
+      "Whiteboard",
+      "Audio System"
+    ],
+    "status": "available",
+    "createdAt": "2025-08-07T09:24:02.343Z",
+    "updatedAt": "2025-08-07T09:24:02.343Z"
+  }
+]

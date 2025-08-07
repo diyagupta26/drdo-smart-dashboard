@@ -1,0 +1,44 @@
+[
+  {
+    "id": "1",
+    "name": "Projector",
+    "description": "High-resolution projector for presentations",
+    "available": true,
+    "createdAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "2",
+    "name": "Microphone System",
+    "description": "Wireless microphone system",
+    "available": true,
+    "createdAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "3",
+    "name": "Video Conference",
+    "description": "Video conferencing equipment",
+    "available": true,
+    "createdAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "4",
+    "name": "Recording Equipment",
+    "description": "Audio/video recording setup",
+    "available": true,
+    "createdAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "5",
+    "name": "Smart TV",
+    "description": "65-inch smart TV for presentations",
+    "available": true,
+    "createdAt": "2025-08-07T09:24:02.343Z"
+  },
+  {
+    "id": "6",
+    "name": "Audio System",
+    "description": "Professional audio system",
+    "available": true,
+    "createdAt": "2025-08-07T09:24:02.343Z"
+  }
+]
